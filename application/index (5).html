@@ -1,0 +1,123 @@
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ChatBot</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Patrick+Hand&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Patrick Hand', cursive;
+        }
+    </style>
+</head>
+<body class="bg-white flex items-center justify-center h-screen">
+    <div class="w-full max-w-md border-2 border-black rounded-lg p-4">
+        <div class="flex flex-col items-center">
+            <div class="w-24 h-24 border-2 border-black rounded-full mb-4"></div>
+            <h1 class="text-3xl font-bold mb-4">ChatBot</h1>
+        </div>
+        <div class="flex items-start mb-4">
+            <div class="w-8 h-8 border-2 border-black rounded-full mr-2"></div>
+            <div>
+                <p class="text-sm font-bold">ChatBot</p>
+                <div class="border-2 border-black rounded-lg p-2">
+                    <p>Halo, Ada yang bisa saya bantu?</p>
+                </div>
+            </div>
+        </div>
+        <div class="flex items-end justify-end mb-4">
+            <div>
+                <p class="text-sm font-bold text-right">Pengguna</p>
+                <div class="border-2 border-black rounded-lg p-2">
+                    <p>Terima kasih!</p>
+                </div>
+            </div>
+            <div class="w-8 h-8 border-2 border-black rounded-full ml-2"></div>
+        </div>
+        <div class="border-2 border-black rounded-lg p-2 mb-4">
+            <p class="text-sm font-bold mb-2">Rekomendasi</p>
+            <div class="space-y-2">
+                <div class="border-2 border-black rounded-lg p-2">
+                    <p>Kapan Perpusnya Buka?</p>
+                </div>
+                <div class="border-2 border-black rounded-lg p-2">
+                    <p>Carikan Buku tentang AI!</p>
+                </div>
+                <div class="border-2 border-black rounded-lg p-2">
+                    <p>Bagaimana Cara Meminjam Buku?</p>
+                </div>
+            </div>
+        </div>
+        <div class="flex items-center border-2 border-black rounded-full p-2">
+            <input type="text" placeholder="Masukan Pesan...................." class="flex-grow outline-none">
+            <button class="ml-2">
+                <i class="fas fa-paper-plane"></i>
+            </button>
+        </div>
+    </div>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+	<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        const inputField = document.querySelector("input");
+        const sendButton = document.querySelector("button");
+        const chatContainer = document.querySelector(".w-full.max-w-md");
+
+        // Predefined responses
+        const responses = {
+            "halo": "Halo! Ada yang bisa saya bantu?",
+            "kapan perpusnya buka": "Perpustakaan buka setiap hari Senin - Jumat, pukul 08.00 - 16.00.",
+            "carikan buku tentang ai": "Silakan cek koleksi buku AI di perpus kami!",
+            "bagaimana cara meminjam buku": "Anda dapat meminjam buku dengan membawa kartu anggota ke petugas perpustakaan.",
+            "terima kasih": "Sama-sama! 😊",
+            "default": "Maaf, saya tidak mengerti. Bisa dijelaskan lebih lanjut?"
+        };
+
+        // Function to add chat messages
+        function addMessage(sender, message, isUser = false) {
+            let chatMessage = `<div class="flex ${isUser ? 'items-end justify-end' : 'items-start'} mb-4">
+                ${isUser ? '' : '<div class="w-8 h-8 border-2 border-black rounded-full mr-2"></div>'}
+                <div>
+                    <p class="text-sm font-bold ${isUser ? 'text-right' : ''}">${sender}</p>
+                    <div class="border-2 border-black rounded-lg p-2">
+                        <p>${message}</p>
+                    </div>
+                </div>
+                ${isUser ? '<div class="w-8 h-8 border-2 border-black rounded-full ml-2"></div>' : ''}
+            </div>`;
+
+            chatContainer.insertAdjacentHTML("beforeend", chatMessage);
+            chatContainer.scrollTop = chatContainer.scrollHeight;
+        }
+
+        // Function to process user input
+        function processInput() {
+            let userInput = inputField.value.trim().toLowerCase();
+            if (userInput === "") return;
+
+            addMessage("Pengguna", userInput, true);
+
+            setTimeout(() => {
+                let response = responses[userInput] || responses["default"];
+                addMessage("ChatBot", response);
+            }, 500); // Simulate bot thinking
+
+            inputField.value = "";
+        }
+		
+		
+
+        // Event listener for the send button
+        sendButton.addEventListener("click", processInput);
+
+        // Event listener for Enter key
+        inputField.addEventListener("keypress", function (e) {
+            if (e.key === "Enter") {
+                processInput();
+            }
+        });
+    });
+</script>
+
+</body>
+</html>
