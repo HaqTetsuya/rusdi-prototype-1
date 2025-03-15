@@ -4,7 +4,9 @@ class Chat extends CI_Controller
 {
     public function index()
     {
-        $this->load->view('chatForm');
+        $this->load->model('chat_model');
+        $data['chats'] = $this->chat_model->getChatHistory();
+        $this->load->view('chatForm', $data);
     }
 
 
@@ -64,6 +66,8 @@ class Chat extends CI_Controller
             } else {
                 $reply = 'Terjadi kesalahan saat memproses intent.';
             }
+            $this->load->model('chat_model');
+            $this->chat_model->saveChat($message, $reply);
         } else {
             $reply = 'Terjadi kesalahan saat menghubungi server. Silakan coba lagi.';
         }

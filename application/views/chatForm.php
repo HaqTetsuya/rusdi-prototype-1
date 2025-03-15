@@ -33,34 +33,23 @@
                     <p>Halo, Ada yang bisa saya bantu?</p>
                 </div>
             </div>
-            <div class="flex items-end justify-end space-x-2">
-                <div class="bg-white p-3 rounded-lg border-2 border-black">
-                    <p class="text-right font-bold">User</p>
-                    <p>Halo Selamat Siang!!!!</p>
+            <?php foreach ($chats as $chat): ?>
+                <div class="flex items-end justify-end space-x-2">
+                    <div class="bg-white p-3 rounded-lg border-2 border-black">
+                        <p class="text-right font-bold">User</p>
+                        <p><?= $chat['user_message'] ?></p>
+                    </div>
+                    <div class="w-10 h-10 rounded-full border-2 border-black flex-shrink-0"></div>
                 </div>
-                <div class="w-10 h-10 rounded-full border-2 border-black flex-shrink-0"></div>
-            </div>
-            <div class="flex items-start space-x-2">
-                <div class="w-10 h-10 rounded-full border-2 border-black flex-shrink-0"></div>
-                <div class="bg-white p-3 rounded-lg border-2 border-black">
-                    <p class="font-bold">ChatBot</p>
-                    <p>Siang juga kak, kami siap membantu anda</p>
+                <div class="flex items-start space-x-2">
+                    <div class="w-10 h-10 rounded-full border-2 border-black flex-shrink-0"></div>
+                    <div class="bg-white p-3 rounded-lg border-2 border-black">
+                        <p class="font-bold">ChatBot</p>
+                        <p><?= $chat['bot_response'] ?></p>
+                    </div>
                 </div>
-            </div>
-            <div class="flex items-end justify-end space-x-2">
-                <div class="bg-white p-3 rounded-lg border-2 border-black">
-                    <p class="text-right font-bold">User</p>
-                    <p>Bagaimana cara meminjam Buku</p>
-                </div>
-                <div class="w-10 h-10 rounded-full border-2 border-black flex-shrink-0"></div>
-            </div>
-            <div class="flex items-start space-x-2">
-                <div class="w-10 h-10 rounded-full border-2 border-black flex-shrink-0"></div>
-                <div class="bg-white p-3 rounded-lg border-2 border-black">
-                    <p class="font-bold">ChatBot</p>
-                    <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat</p>
-                </div>
-            </div>
+            <?php endforeach; ?>
+
         </div>
         <hr>
         <form id="chat-form" class="flex items-center space-x-2 mt-4 ">
