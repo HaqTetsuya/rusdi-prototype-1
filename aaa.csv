@@ -1,0 +1,200 @@
+text,intent
+hallo,greeting
+halo,greeting
+selamat pagi,greeting
+selamat siang,greeting
+halo selamat pagi,greeting
+halo selamat siang,greeting
+hello,greeting
+hello selamat siang,greeting
+p,greeting
+hai,greeting
+hey,greeting
+Halo!,greeting
+Hai!,greeting
+Selamat pagi!,greeting
+Selamat siang!,greeting
+Selamat sore!,greeting
+Selamat malam!,greeting
+Salam!,greeting
+"Permisi, boleh bertanya?",greeting
+Apa kabar?,greeting
+Semoga harimu menyenangkan!,greeting
+Mohon bantuannya ya!,greeting
+"Saya ada pertanyaan, bisa bantu?",greeting
+"Halo, boleh ngobrol?",greeting
+"Hai, saya butuh informasi.",greeting
+"Halo, bagaimana harimu?",greeting
+Slmt pgi,greeting
+woi,greeting
+yo,greeting
+cuy,greeting
+coy,greeting
+Euy!,greeting
+bang,greeting
+bro,greeting
+coek,greeting
+Gimana kabarnya?,greeting
+Lagi apa nih?,greeting
+woigh,greeting
+"Yo, chatbot!",greeting
+Apa loh!,greeting
+"Bot, lu ada?",greeting
+Coba jawab ini dong!,greeting
+"Misi bot, gua mau nanya!",greeting
+Yak!,greeting
+Yoks!,greeting
+Gaskeun!,greeting
+Sikat bos!,greeting
+"Hadeh, chatbot lagi nih!",greeting
+Eh lu bisa jawab ga nih?,greeting
+P g nanya dikit boleh?,greeting
+"Btw, lo bisa bantuin gw?",greeting
+Wazzappp!,greeting
+"Wehh, ada bot nih!",greeting
+"Bot, nanya dikit dong!",greeting
+"Gw pusing nih, tolong jawab!",greeting
+"Gaskan, bot!",greeting
+"Nanya nih, jawab jujur ya!",greeting
+"Wazzzap, ada yg bisa dibantu?",greeting
+Hloo?,greeting
+Haaii!!,greeting
+H4yoo!,greeting
+Slmat pgii!,greeting
+Woiii!,greeting
+Alo??,greeting
+H3y bot,greeting
+Hae!,greeting
+Smlmt mlm!!,greeting
+Smlmt siang,greeting
+smlmt sore,greeting
+"Aloo, jwb donk!",greeting
+"Ehh bot, jwb dlu",greeting
+Oyyyy bbottt!!,greeting
+Sllmtt pgii bot!,greeting
+salamlekom,greeting
+Assalamualaikum,greeting
+tes,greeting
+assalamualaikum bang,greeting
+tolong bantu gw,greeting
+"Eh bot, tau ga gw siapa?",greeting
+"Gue butuh bantuan nih, seriusan!",greeting
+excuse me,greeting
+tod,greeting
+"Tod, bantuin gw",greeting
+"P, bantu",greeting
+pagi,greeting
+siang,greeting
+sore,greeting
+malam,greeting
+shalom,greeting
+assalamualaiku warahmatullahi wabarokatuh,greeting
+execuse me,greeting
+help me,greeting
+greetings,greeting
+can you help me,greeting
+help,greeting
+how are you?,greeting
+tes,greeting
+hey can you help me?,greeting
+could you assist me?,greeting
+Terima kasih! Selamat tinggal!,goodbye
+Makasih! Sampai jumpa!,goodbye
+Thanks ya! Bye!,goodbye
+Terima kasih banyak! Dadah!,goodbye
+Sampai nanti! Makasih banyak!,goodbye
+"Sampai ketemu lagi! Thanks, bot!",goodbye
+Saya undur diri! Makasih atas infonya!,goodbye
+Mohon pamit dulu! Appreciate banget!,goodbye
+"Terima kasih, saya pergi dulu ya!",goodbye
+"Selamat tinggal, sampai bertemu lagi!",goodbye
+Tq bro! Gas off!,goodbye
+"Bye, bot kece! Makasih gann!",goodbye
+"Udah kelar, gas out! Thanks bro/sis!",goodbye
+Otw slmtnggl! Tenk yu!,goodbye
+Baii! Mkshh y!,goodbye
+Ciaw! Tnq bot!,goodbye
+"Udah cukup, kepala ngebul! Makasih, bot!",goodbye
+"Makasih bot, lu emang bestie! Bye, jangan kangen ya!",goodbye
+"Logout dari realitas dulu! Thanks, kasih gue hoki dong!",goodbye
+"Jangan sedih, gua balik lagi kok! Thanks bot!",goodbye
+"Mantep, bot! Gw traktir kalo bisa! Bye dulu!",goodbye
+"Udahan dulu, biar ga overthinking! Makasih ya!",goodbye
+Thanks! Udah cukup buat hari ini!,goodbye
+"Udah puas, makasih ya! Bye-bye!",goodbye
+Makasih! Semoga harimu menyenangkan!,goodbye
+Mantapp! Sampai ketemu lagi!,goodbye
+Makasih banyak! Sampai jumpa di lain waktu!,goodbye
+"Ngebantu banget, thanks! Gua cabut dulu!",goodbye
+"Makasih! Jangan rindu ya, bot!",goodbye
+"Oke, cukup sekian. Terima kasih!",goodbye
+"Thanks bot, kasih aku hoki dong!",goodbye
+"Udah ah, otw tidur! Makasih ya!",goodbye
+See you later! Makasih!,goodbye
+"Makasih bot, kapan-kapan ngobrol lagi!",goodbye
+"Udah kelar nanya, makasih! Sampai nanti!",goodbye
+"Terima kasih banyak, bot! Gue out!",goodbye
+"Thanks, bot! Sampai jumpa di lain kesempatan!",goodbye
+"Udah ngerti, mksh ya! Byee!",goodbye
+Mksh bnyk! Brb dulu ya!,goodbye
+Oke thanks! Close case!,goodbye
+"Terima kasih, bot! Saya pamit dulu!",goodbye
+Thanks ya! Jangan lupa istirahat juga!,goodbye
+"Udahan dulu ya, makasih bot!",goodbye
+"Makasih bot, lu keren banget! Gue cabs dulu!",goodbye
+"Thanks banget! Udah cukup, cabut dulu ya!",goodbye
+"Thank you, bot! Semoga harimu menyenangkan!",goodbye
+Bye-bye! Makasih infonya!,goodbye
+Daaaa! Makasih banyak ya!,goodbye
+"Udah paham, mksh ya! Gue off dulu!",goodbye
+Makasih bot! Sampai jumpa lagi di chat berikutnya!,goodbye
+Trims! Udah cukup hari ini! Bye-bye!,goodbye
+Terima kasih dan sampai jumpa lagi!,goodbye
+"Makasih, gua pamit dulu ya!",goodbye
+"Udah cukup ngobrolnya, makasih banyak!",goodbye
+"Thanks bro, gua off dulu!",goodbye
+"Oke, gua cabut. Makasih bot!",goodbye
+Terima kasih! Gue pergi dulu!,goodbye
+Thank you! Sampai jumpa lain kali!,goodbye
+"Makasih bot, udah nemenin! Gue logout dulu!",goodbye
+"Udah puas nanya, makasih! Gua out!",goodbye
+"Udahan ya, makasih banyak!",goodbye
+Thank you so much! Gue pamit dulu!,goodbye
+"Oke bot, gua berangkat dulu. Makasih ya!",goodbye
+"Thanks ya, gua gas duluan!",goodbye
+"Udah cukup, bye bye! Makasih ya!",goodbye
+Makasih ya bot! Gue keluar dulu!,goodbye
+Gass off! Makasih banyak bot!,goodbye
+"Mantul! Mksh, cabs dulu ya!",goodbye
+"Makasih bot, gua tidur dulu!",goodbye
+"Udah cukup, thanks ya! Sampai besok!",goodbye
+"Thanks bot, gua balik ke dunia nyata dulu!",goodbye
+Makasih banyak! Gua logout dulu ya!,goodbye
+"Udah puas ngobrol, thanks ya! Bye!",goodbye
+Makasih bot! Sampai jumpa di lain kesempatan!,goodbye
+Thanks bot! Gue cabut!,goodbye
+"Makasih ya, gua gaskeun pergi!",goodbye
+"Oke, cukup sekian. Thank you bot!",goodbye
+Terima kasih banyak! Gua pamit dulu ya!,goodbye
+"Udah ngerti, mksh bot! Bye bye!",goodbye
+"Thanks bro, gua off!",goodbye
+"Otw off, thanks ya!",goodbye
+"Udahan, trims banyak!",goodbye
+"Oke gua undur diri, makasih ya!",goodbye
+"Udah cukup belajar, makasih bot!",goodbye
+"Udah cukup, trims banyak!",goodbye
+"Makasih banyak, gua pamit ya!",goodbye
+"Thanks ya, cabut dulu!",goodbye
+"Oke, paham. Makasih!",goodbye
+"Udah kelar mikir, thanks ya!",goodbye
+Thanks bot! Gue gas tidur dulu!,goodbye
+Makasih! Gue stop di sini!,goodbye
+"Udah selesai, thank you bot!",goodbye
+"Makasih, pamit dulu ya!",goodbye
+"Oke bot, gua tinggal dulu. Makasih ya!",goodbye
+"Gua cabs dulu ya, makasih!",goodbye
+"Oke, sampai ketemu lagi! Thanks!",goodbye
+"Udah cukup buat hari ini, makasih!",goodbye
+Trims bot! Sampai jumpa lagi!,goodbye
+Udahan dulu ya! Makasih banyak!,goodbye
+aku pergi,goodbye
