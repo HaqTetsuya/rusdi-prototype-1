@@ -6,11 +6,11 @@ class chat_model extends CI_Model {
             'user_message' => $userMessage,
             'bot_response' => $botResponse
         ];
-        $this->db->insert('chats', $data);
+        $this->db->insert('chats2', $data);
     }
 
     public function getChatHistory() {
         $this->db->order_by('timestamp', 'ASC');
-        return $this->db->get('chats')->result_array();
+        return $this->db->get('chats2')->result_array();
     }
 }
