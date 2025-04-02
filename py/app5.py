@@ -22,7 +22,7 @@ df['combined_text'] = df[['Title', 'Authors', 'Description', 'Category']].apply(
 # Encode books once for efficiency
 book_embeddings = model.encode(df['combined_text'].tolist(), show_progress_bar=True)
 
-@app.route('/recommend', methods=['POST'])
+@app.route('/analyze', methods=['POST'])
 def recommend_books():
     data = request.get_json()
     user_query = data.get("query", "")
