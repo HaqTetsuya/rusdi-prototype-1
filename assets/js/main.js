@@ -46,7 +46,7 @@ $(document).ready(function() {
 
         // Send AJAX request
         $.ajax({
-            url: 'https://localhost/rusdi-prototype-1/chat/send',
+            url: 'https://localhost/book_recomendation/chat/send',
             type: 'POST',
             contentType: 'application/json', 
             data: JSON.stringify({ message: message }),
