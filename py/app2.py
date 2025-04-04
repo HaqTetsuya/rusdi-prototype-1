@@ -9,7 +9,10 @@ import json
 app = Flask(__name__)
 
 # Global variables to store loaded model, tokenizer, and other resources
-MODEL_SAVE_PATH = "C:/xampp/htdocs/rusdi-prototype-2/py/indobert_intent_model"  # Your existing path
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+
+# Define the relative path
+MODEL_SAVE_PATH = os.path.join(BASE_DIR, "indobert_intent_model")
 model = None
 tokenizer = None
 intent_classes = None
