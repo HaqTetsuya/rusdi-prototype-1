@@ -3,10 +3,16 @@ defined('BASEPATH') or exit('No direct script access allowed');
 
 class Chat2 extends CI_Controller
 {
+    public function __construct()
+		{
+			parent::__construct();
+			$this->load->model('Chat_model', 'chatModel'); // Memuat model Chat_model
+		}
+
     public function index()
     {
-        $this->load->model('chat_model');
-        $data['chats'] = $this->chat_model->getChatHistory();
+        $data['active_controller'] = 'chat2'; // Menandai controller yang aktif
+        $data['chats'] = $this->chatModel->getChatHistory('chats2'); // Gunakan tabel 'chats2'
         $this->load->view('chatForm', $data);
     }
 
@@ -20,7 +26,7 @@ class Chat2 extends CI_Controller
 		$data = json_decode(file_get_contents('php://input'), true);
 		$message = $data['message'] ?? '';
 
-		$ch = curl_init('http://localhost:5000/predict_intent');
+		$ch = curl_init('http://localhost:5000/analyze');
 		curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
 		curl_setopt($ch, CURLOPT_POST, true);
 		curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode(["text" => $message]));
@@ -57,7 +63,7 @@ class Chat2 extends CI_Controller
 					case 'denied':
 						$reply = 'Baik, saya tidak akan melanjutkan permintaan ini. ?';
 						break;
-					case 'out_of_distribution':
+					case 'unknown':
 						$reply = 'Maaf, saya tidak mengenali perintah ini. Bisa dijelaskan lebih lanjut? ??';
 						break;
 					default:
@@ -66,8 +72,7 @@ class Chat2 extends CI_Controller
 				}
 			}
 
-			$this->load->model('chat_model');
-			$this->chat_model->saveChat($message, $reply);
+			$this->chatModel->saveChat('chats2', $message, $reply);
 		} else {
 			error_log("Flask API error: HTTP $httpcode");
 			$reply = 'Terjadi kesalahan saat menghubungi server. Silakan coba lagi.';
@@ -78,8 +83,7 @@ class Chat2 extends CI_Controller
 	
 	public function clear()
 	{
-		$this->load->model('chat_model');
-		$this->chat_model->clearChatHistory();
+		$this->chatModel->clearChatHistory('chats2');
 		redirect('chat2'); // redirect back to chat page
 	}
 

@@ -111,8 +111,8 @@ def predict_intent_with_enhanced_ood(text, model, tokenizer, intent_classes,
         "energy_score": energy.item()
     }
 
-@app.route('/predict_intent', methods=['POST'])
-def predict_intent():
+@app.route('/analyze', methods=['POST'])
+def analyze():
     """Endpoint to predict intent from text."""
     # Check if request contains JSON
     if not request.is_json:

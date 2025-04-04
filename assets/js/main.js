@@ -46,7 +46,7 @@ $(document).ready(function() {
 
         // Send AJAX request
         $.ajax({
-            url: 'https://localhost/rusdi-prototype-2/chat2/send',
+            url: `https://localhost/rusdi-prototype-1/${activeController}/send`,
             type: 'POST',
             contentType: 'application/json', 
             data: JSON.stringify({ message: message }),

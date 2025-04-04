@@ -59,7 +59,7 @@
             </button>
         </form>
     </div>
-	<form method="post" action="<?php echo site_url('chat2/clear'); ?>">
+	<form method="post" action="<?php echo site_url($active_controller.'/clear'); ?>">
 		<button type="submit" class="fixed top-5 left-5 bg-white-500 text-black p-3 rounded-full shadow-lg border-2 border-black"
 			onclick="return confirm('Yakin ingin menghapus semua riwayat chat?')">
 			<i class="fas fa-trash"></i>
@@ -67,6 +67,10 @@
 	</form>
 
     <script src="<?php echo base_url('assets/js/main.js'); ?>"></script>
+	<script>
+		var activeController = "<?php echo $active_controller; ?>"; // Change this to "chat2" when needed
+	</script>
+
 </body>
 
 </html>
