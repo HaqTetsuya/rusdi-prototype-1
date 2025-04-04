@@ -99,7 +99,7 @@ def predict_intent_with_enhanced_ood(text, model, tokenizer, intent_classes,
         is_ood = (energy.item() > energy_threshold) or (max_prob.item() < msp_threshold)
     
     # Get predicted intent class
-    predicted_intent = intent_classes[pred_idx.item()] if not is_ood else "out_of_distribution"
+    predicted_intent = intent_classes[pred_idx.item()] if not is_ood else "unknown"
     
     return {
         "intent": predicted_intent,
