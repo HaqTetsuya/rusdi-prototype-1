@@ -13,4 +13,9 @@ class chat_model extends CI_Model {
         $this->db->order_by('timestamp', 'ASC');
         return $this->db->get('chats2')->result_array();
     }
+	public function clearChatHistory()
+	{
+		return $this->db->empty_table('chats2'); 
+	}
+
 }
