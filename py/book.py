@@ -34,6 +34,7 @@ def get_recommendations(user_query, top_n=5):
             "title": str(df.iloc[idx].get('Title', 'Unknown')),
             "author": str(df.iloc[idx].get('Authors', 'Unknown')),
             "category": str(df.iloc[idx].get('Category', 'N/A')),
+			"description": str(df.iloc[idx].get('Description', 'N/A')),
             "year": int(df.iloc[idx].get('Publish Date (Year)', 0)) if not pd.isna(df.iloc[idx].get('Publish Date (Year)')) else None,
             "relevance": round(float(similarities[idx]), 2)
         }
