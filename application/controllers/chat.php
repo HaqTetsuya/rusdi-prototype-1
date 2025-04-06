@@ -1,9 +1,6 @@
 <?php
-<<<<<<< HEAD
+
 defined('BASEPATH') or exit('No script direct access allowed');
-=======
-defined('BASEPATH') or exit('No direct script access allowed');
->>>>>>> 969619a (adjust python code)
 
 class Chat extends CI_Controller
 {
@@ -49,7 +46,6 @@ class Chat extends CI_Controller
         // Cek apakah respons valid dari Flask API
         if ($httpcode == 200 && $response) {
             $responseData = json_decode($response, true);
-<<<<<<< HEAD
             $intent = $responseData['intent'] ?? null;
             $course = $responseData['course'] ?? null;
             $day = $responseData['day'] ?? null;
@@ -123,9 +119,6 @@ class Chat extends CI_Controller
             }
 
             $this->chatModel->saveChat('chats', $message, $reply);
-=======
-            $reply = $responseData['reply'] ?? 'Tidak ada respons dari server.';
->>>>>>> 969619a (adjust python code)
         } else {
             $reply = 'Terjadi kesalahan saat menghubungi server. Silakan coba lagi.';
         }
