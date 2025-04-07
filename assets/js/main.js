@@ -46,59 +46,47 @@ $(document).ready(function() {
 
         // Send AJAX request
         $.ajax({
+<<<<<<< HEAD
             url: `${baseUrl}${activeController}/send`,
+=======
+            url: `https://localhost/rusdi-prototype-1/${activeController}/send`,
+>>>>>>> 537141c (revert js)
             type: 'POST',
-            contentType: 'application/json',
-            data: JSON.stringify({
-                message: message
-            }),
+            contentType: 'application/json', 
+            data: JSON.stringify({ message: message }),
             dataType: 'json',
-            beforeSend: function() {
-                // Show a typing indicator
-                $('#chat-container').append(`
-            <div id="typing-indicator" class="flex items-start space-x-2 animate-pulse">
-                <div class="w-10 h-10 rounded-full border-2 border-black flex-shrink-0"></div>
-                <div class="bg-gray-200 p-3 rounded-lg border-2 border-gray-400">
-                    <p class="font-bold text-gray-600">ChatBot</p>
-                    <p class="text-gray-500">Typing...</p>
-                </div>
-            </div>
-        `);
-                scrollToBottom();
-            },
             success: function(response) {
-                $('#typing-indicator').remove(); // Remove typing indicator
-
-                let botResponse = `
-            <div class="flex items-start space-x-2 fade-in">
-                <div class="w-10 h-10 rounded-full border-2 border-black flex-shrink-0 bg-gray-300"></div>
-                <div class="bg-white p-3 rounded-lg border-2 border-black shadow-md">
-                    <p class="font-bold text-blue-600">📚 ChatBot</p>
-                    <p class="text-gray-800">${response.response}</p>
-                </div>
-            </div>
-        `;
-
-                $('#chat-container').append(botResponse);
+                $('#typing-indicator').remove();
+                $('#chat-container').append(`
+                    <div class="flex items-start space-x-2">
+                        <div class="w-10 h-10 rounded-full border-2 border-black flex-shrink-0"></div>
+                        <div class="bg-white p-3 rounded-lg border-2 border-black">
+                            <p class="font-bold">ChatBot</p>
+                            <p>${response.response}</p>
+                        </div>
+                    </div>
+                `);
                 scrollToBottom();
             },
             error: function(xhr, status, error) {
+                console.log("XHR Response: ", xhr.responseText);
+                console.log("Status: ", status);
+                console.log("Error: ", error);
+            
                 $('#typing-indicator').remove();
-
-                let errorResponse = `
-            <div class="flex items-start space-x-2 fade-in">
-                <div class="w-10 h-10 rounded-full border-2 border-black flex-shrink-0 bg-red-300"></div>
-                <div class="bg-white p-3 rounded-lg border-2 border-red-500 shadow-md">
-                    <p class="font-bold text-red-600">⚠️ ChatBot</p>
-                    <p class="text-gray-800">Maaf, terjadi kesalahan. Silakan coba lagi.</p>
-                </div>
-            </div>
-        `;
-
-                $('#chat-container').append(errorResponse);
+                $('#chat-container').append(`
+                    <div class="flex items-start space-x-2">
+                        <div class="w-10 h-10 rounded-full border-2 border-black flex-shrink-0"></div>
+                        <div class="bg-white p-3 rounded-lg border-2 border-black">
+                            <p class="font-bold">ChatBot</p>
+                            <p>Maaf, terjadi kesalahan. Silakan coba lagi.</p>
+                        </div>
+                    </div>
+                `);
                 scrollToBottom();
             }
         });
+        
         
     });
 
