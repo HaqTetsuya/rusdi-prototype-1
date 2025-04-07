@@ -23,7 +23,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 | a PHP script and you can easily do that on your own.
 |
 */
-$config['base_url'] = 'https://localhost/book_recomendation';
+$config['base_url'] = 'https://localhost/rusdi-prototype-1';
 
 /*
 |--------------------------------------------------------------------------
