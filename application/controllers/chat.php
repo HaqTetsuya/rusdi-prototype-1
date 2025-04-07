@@ -1,13 +1,20 @@
 <?php
 defined('BASEPATH') or exit('No script direct access allowed');
+
 class Chat extends CI_Controller
 {
+	public function __construct()
+		{
+			parent::__construct();
+			$this->load->model('Chat_model', 'chatModel'); // Memuat model Chat_model
+		}
+	
     public function index()
-    {
-        $this->load->model('chat_model');
-        $data['chats'] = $this->chat_model->getChatHistory();
-        $this->load->view('chatForm', $data);
-    }
+		{
+			$data['active_controller'] = 'chat'; // Menandai controller yang aktif
+			$data['chats'] = $this->chatModel->getChatHistory('chats'); // Gunakan tabel 'chats'
+			$this->load->view('chatForm', $data);
+		}
 
 
     public function send()
@@ -105,8 +112,7 @@ class Chat extends CI_Controller
                     break;
             }
 
-            $this->load->model('chat_model');
-            $this->chat_model->saveChat($message, $reply);
+            $this->chatModel->saveChat('chats', $message, $reply);
         } else {
             $reply = 'Terjadi kesalahan saat menghubungi server. Silakan coba lagi.';
         }
@@ -114,4 +120,9 @@ class Chat extends CI_Controller
 
         echo json_encode(['response' => $reply]);
     }
+		public function clear()
+		{
+			$this->chatModel->clearChatHistory('chats');
+			redirect('chat'); // redirect back to chat page
+		}
 }
