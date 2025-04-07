@@ -68,6 +68,7 @@
 
     <script src="<?php echo base_url('assets/js/main.js'); ?>"></script>
 	<script>
+		const baseUrl = "<?= base_url() ?>";
 		var activeController = "<?php echo $active_controller; ?>"; // Change this to "chat2" when needed
 	</script>
 
