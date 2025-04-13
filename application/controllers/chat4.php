@@ -10,7 +10,7 @@ class Chat4 extends CI_Controller
 
     public function index()
     {
-        $data['active_controller'] = 'chat2'; // Menandai controller yang aktif
+        $data['active_controller'] = 'chat4'; // Menandai controller yang aktif
         $data['chats'] = $this->chatModel->getChatHistory('chats4'); // Gunakan tabel 'chats2'
         $this->load->view('chatForm', $data);
     }
@@ -54,15 +54,25 @@ class Chat4 extends CI_Controller
                 error_log("Intent received: $intent, Confidence: $confidence");
                 
                 switch ($intent) {
+					case 'greeting':
+						$result['response'] = 'Halo! Ada yang bisa saya bantu? ??';
+						break;
+					case 'goodbye':
+						$result['response'] = 'Sampai jumpa! Semoga harimu menyenangkan! ??';
+						break;
+					case 'confirm':
+						$result['response'] = 'Baik, saya akan memproses permintaan Anda! ?';
+						break;
+					case 'denied':
+						$result['response'] = 'Baik, saya tidak akan melanjutkan permintaan ini. ?';
+						break;					
                     case 'jam_layanan':
                         $result['response'] = 'Jam layanan perpustakaan adalah Senin-Jumat: 08.00-16.00, Sabtu: 09.00-13.00, Minggu: Tutup';
-                        break;
-                        
+                        break;                        
                     case 'cari_buku':
                         $result['response'] = 'Silakan masukkan deskripsi bukunya seperti genre, judul, atau kategori.';
                         $result['next_action'] = 'wait_book_recommendation';
-                        break;
-                        
+                        break;                        
                     case 'unknown':
                         $result['response'] = 'Maaf, saya tidak mengenali perintah ini. Bisa dijelaskan lebih lanjut?';
                         break;

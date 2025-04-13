@@ -111,7 +111,7 @@ def predict_intent_with_enhanced_ood(text, model, tokenizer, intent_classes,
     elif method == 'msp':
         is_ood = max_prob.item() < msp_threshold
     elif method == 'combined':
-        is_ood = (energy.item() > energy_threshold) or (max_prob.item() < msp_threshold)
+        is_ood = (energy.item() > energy_threshold) and (max_prob.item() < msp_threshold)
     
     # Get predicted intent class
     predicted_intent = intent_classes[pred_idx.item()] if not is_ood else "unknown"
@@ -218,3 +218,4 @@ if __name__ == '__main__':
     # Option 2 (Alternative): Disable debug mode entirely for production
     # app.run(debug=False, host='0.0.0.0', port=5000)
     # app.run(debug=False, host='0.0.0.0', port=5000)
+#curl -X POST http://localhost:5000/analyze -H "Content-Type: application/json" -d '{"text": "buku fantasi romance"}'	

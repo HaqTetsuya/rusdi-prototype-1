@@ -1,4 +1,6 @@
 $(document).ready(function() {
+	let waitingForRecommendation = false;
+
     // Function to scroll chat to bottom
     function scrollToBottom() {
         var chatContainer = document.getElementById('chat-container');
@@ -10,6 +12,9 @@ $(document).ready(function() {
 
     // Handle form submission
 	$('#chat-form').submit(function(e) {
+		
+		//waitingForRecommendation=false;
+		
 		e.preventDefault();
 
 		var message = $('#message').val();
@@ -40,6 +45,8 @@ $(document).ready(function() {
 			</div>
 		`);
 		scrollToBottom();
+		
+		console.log("waitingForRecommendation status:", waitingForRecommendation); // debug log
 
 		// Percabangan untuk input rekomendasi
 		if (waitingForRecommendation) {
