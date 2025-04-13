@@ -63,11 +63,18 @@ class Chat2 extends CI_Controller
 					case 'denied':
 						$reply = 'Baik, saya tidak akan melanjutkan permintaan ini. ?';
 						break;
+					case 'jam_layanan':
+						$reply = '';
+						break;
+					case 'cari_buku':
+						$reply = 'Silakan masukkan deskripsi bukunya seperti genre, judul, atau kategori.';
+						$action = 'wait_book_recomendation';
+						break;
 					case 'unknown':
 						$reply = 'Maaf, saya tidak mengenali perintah ini. Bisa dijelaskan lebih lanjut? ??';
 						break;
 					default:
-						$reply = "terjadi kesalahan, intent tidak ada";
+						$reply = "terjadi kesalahan";
 						break;
 				}
 			}

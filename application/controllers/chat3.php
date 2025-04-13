@@ -24,6 +24,7 @@ class Chat3 extends CI_Controller {
      * Handle chat message sending
      * Communicates with Flask API for book recommendations
      */
+	
 	public function send() {
 		if (!$this->input->is_ajax_request()) {
 			show_error('Direct access not allowed', 403);
