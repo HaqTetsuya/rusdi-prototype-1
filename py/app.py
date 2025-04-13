@@ -1,27 +1,220 @@
 from flask import Flask, request, jsonify
-from flask_cors import CORS  
+from transformers import AutoModelForSequenceClassification, AutoTokenizer
+from sentence_transformers import SentenceTransformer
+from sklearn.metrics.pairwise import cosine_similarity
+import pickle
+import torch
+import numpy as np
+import pandas as pd
+import os
+import json
 
 app = Flask(__name__)
-CORS(app)  
 
-intent_mapping = {
-    '/greet': 'greeting',
-    'help': 'bantuan',
-    'book': 'pinjam_buku',
-    'search': 'cari_buku',
-    'schedule': 'jadwal_perpus'
-}
+# Global variables for intent classification
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+MODEL_SAVE_PATH = os.path.join(BASE_DIR, "indobert_intent_model")
+intent_model = None
+intent_tokenizer = None
+intent_classes = None
+intent_thresholds = None
+
+# Global variables for book recommendation
+print("🔄 Loading metadata and embeddings...")
+embedding_path = "book_embeddings.npy"
+metadata_path = "books_metadata.pkl"
+book_embeddings = np.load(embedding_path, mmap_mode='r')  # mmap avoids loading all into RAM
+with open(metadata_path, 'rb') as f:
+    books_df = pickle.load(f)
+# Load lightweight model ONCE for book recommendations
+recommendation_model = SentenceTransformer('all-MiniLM-L6-v2', device='cpu')  # force CPU
+print(f"✅ Loaded {len(books_df)} books. Using CPU mode with memory mapping.")
+
+def load_ood_thresholds(model_path):
+    """Load the OOD thresholds from the model directory - using JSON instead of pickle."""
+    # Look for JSON file instead of pickle
+    threshold_path = os.path.join(model_path, "ood_thresholds.json")
+    
+    # Check if file exists before attempting to open
+    if os.path.exists(threshold_path):
+        with open(threshold_path, "r") as f:
+            return json.load(f)
+    else:
+        # Provide default thresholds if file not found
+        print(f"Warning: Threshold file not found at {threshold_path}. Using default values.")
+        return {
+            "energy_threshold": 0.0,  # Replace with your default value
+            "msp_threshold": 0.5      # Replace with your default value
+        }
+
+def load_intent_resources():
+    """Load model, tokenizer, intent classes, and thresholds for intent classification."""
+    global intent_model, intent_tokenizer, intent_classes, intent_thresholds
+    
+    print(f"Loading intent resources from {MODEL_SAVE_PATH}...")
+    
+    # Load model and tokenizer
+    intent_model = AutoModelForSequenceClassification.from_pretrained(MODEL_SAVE_PATH)
+    intent_tokenizer = AutoTokenizer.from_pretrained(MODEL_SAVE_PATH)
+    
+    # Load intent classes
+    intent_classes_path = os.path.join(MODEL_SAVE_PATH, "intent_classes.pkl")
+    if os.path.exists(intent_classes_path):
+        with open(intent_classes_path, "rb") as f:
+            intent_classes = pickle.load(f)
+    else:
+        raise FileNotFoundError(f"Intent classes file not found at {intent_classes_path}")
+    
+    # Load OOD thresholds
+    intent_thresholds = load_ood_thresholds(MODEL_SAVE_PATH)
+    
+    print("Intent resources loaded successfully")
+    print(f"Loaded {len(intent_classes)} intent classes")
+    print(f"Thresholds: {intent_thresholds}")
+
+def predict_intent_with_enhanced_ood(text, model, tokenizer, intent_classes, 
+                                    energy_threshold, msp_threshold, method='combined'):
+    """
+    Predict intent with enhanced out-of-distribution detection.
+    
+    Args:
+        text: Input text to classify
+        model: Loaded model
+        tokenizer: Loaded tokenizer
+        intent_classes: List of intent classes
+        energy_threshold: Threshold for energy-based OOD detection
+        msp_threshold: Threshold for maximum softmax probability OOD detection
+        method: OOD detection method ('energy', 'msp', or 'combined')
+        
+    Returns:
+        Dictionary with predicted intent and OOD flag
+    """
+    # Tokenize input
+    inputs = tokenizer(text, return_tensors="pt", padding=True, truncation=True, max_length=512)
+    
+    # Get model outputs
+    with torch.no_grad():
+        outputs = model(**inputs)
+        logits = outputs.logits
+    
+    # Get probabilities
+    probs = torch.nn.functional.softmax(logits, dim=-1)
+    max_prob, pred_idx = torch.max(probs, dim=-1)
+    
+    # Calculate energy score
+    energy = -torch.logsumexp(logits, dim=-1)
+    
+    # Make OOD decision based on selected method
+    is_ood = False
+    if method == 'energy':
+        is_ood = energy.item() > energy_threshold
+    elif method == 'msp':
+        is_ood = max_prob.item() < msp_threshold
+    elif method == 'combined':
+        is_ood = (energy.item() > energy_threshold) or (max_prob.item() < msp_threshold)
+    
+    # Get predicted intent class
+    predicted_intent = intent_classes[pred_idx.item()] if not is_ood else "unknown"
+    
+    return {
+        "intent": predicted_intent,
+        "is_ood": is_ood,
+        "confidence": max_prob.item(),
+        "energy_score": energy.item()
+    }
+
+def get_book_recommendations(user_query, top_n=5):
+    """Get book recommendations based on user query."""
+    user_embedding = recommendation_model.encode([user_query], convert_to_numpy=True, device='cpu')
+    similarities = cosine_similarity(user_embedding, book_embeddings)[0]
+    similar_books_idx = np.argsort(similarities)[-top_n:][::-1]
+    recommendations = []
+    for idx in similar_books_idx:
+        book = {
+            "title": str(books_df.iloc[idx].get('Title', 'Unknown')),
+            "author": str(books_df.iloc[idx].get('Authors', 'Unknown')),
+            "category": str(books_df.iloc[idx].get('Category', 'N/A')),
+            "description": str(books_df.iloc[idx].get('Description', 'N/A')),
+            "year": int(books_df.iloc[idx].get('Publish Date (Year)', 0)) if not pd.isna(books_df.iloc[idx].get('Publish Date (Year)')) else None,
+            "relevance": round(float(similarities[idx]), 2)
+        }
+        recommendations.append(book)
+    return recommendations
 
 @app.route('/analyze', methods=['POST'])
 def analyze():
-    data = request.get_json()  # Ambil data JSON dari request
-    user_input = data.get('text', '')
-    print(user_input)
-    # Cek apakah input sesuai dengan intent command
-    intent = intent_mapping.get(user_input, 'unknown')
+    """Endpoint to predict intent from text."""
+    # Check if request contains JSON
+    if not request.is_json:
+        return jsonify({"error": "Request must be JSON"}), 400
+    
+    # Get text from request
+    data = request.get_json()
+    if 'text' not in data:
+        return jsonify({"error": "Missing 'text' field in request"}), 400
+    
+    text = data['text']
+    
+    # Default to combined method unless specified
+    method = data.get('method', 'combined')
+    if method not in ['energy', 'msp', 'combined']:
+        return jsonify({"error": "Invalid method. Must be 'energy', 'msp', or 'combined'"}), 400
+    
+    # Make prediction
+    result = predict_intent_with_enhanced_ood(
+        text, 
+        intent_model, 
+        intent_tokenizer, 
+        intent_classes, 
+        intent_thresholds["energy_threshold"],
+        intent_thresholds["msp_threshold"],
+        method=method
+    )
+    
+    # Return prediction as JSON
+    return jsonify(result)
 
-    return jsonify({'intent': intent})
+@app.route("/recommend", methods=["POST"])
+def recommend():
+    """Endpoint to get book recommendations."""
+    data = request.get_json()
+    user_query = data.get("query")
+    top_n = int(data.get("top_n", 5))
+    if not user_query:
+        return jsonify({"error": "Query is required."}), 400
+    try:
+        results = get_book_recommendations(user_query, top_n)
+        return jsonify({"query": user_query, "results": results})
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
 
+# Simple test endpoint for intent analysis
+@app.route('/test-intent', methods=['GET'])
+def test_intent():
+    return jsonify({
+        "status": "Intent analysis API is running", 
+        "model_path": MODEL_SAVE_PATH
+    })
+
+# Health check for book recommendations
+@app.route("/", methods=["GET"])
+def index():
+    return jsonify({
+        "status": "API is running",
+        "services": {
+            "intent_analysis": "Available at /analyze",
+            "book_recommendations": "Available at /recommend"
+        }
+    })
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    # Load intent resources only once before starting the server
+    load_intent_resources()
+    
+    # Start the server
+    # Option 1: Keep debug mode but disable auto-reloader
+    app.run(debug=True, use_reloader=False, host='0.0.0.0', port=5000)
+    
+    # Option 2 (Alternative): Disable debug mode entirely for production
+    # app.run(debug=False, host='0.0.0.0', port=5000)
+    # app.run(debug=False, host='0.0.0.0', port=5000)
