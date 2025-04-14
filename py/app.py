@@ -75,20 +75,12 @@ def load_intent_resources():
 def predict_intent_with_enhanced_ood(text, model, tokenizer, intent_classes, 
                                     energy_threshold, msp_threshold, method='combined'):
     """
-    Predict intent with enhanced out-of-distribution detection.
-    
-    Args:
-        text: Input text to classify
-        model: Loaded model
-        tokenizer: Loaded tokenizer
-        intent_classes: List of intent classes
-        energy_threshold: Threshold for energy-based OOD detection
-        msp_threshold: Threshold for maximum softmax probability OOD detection
-        method: OOD detection method ('energy', 'msp', or 'combined')
-        
-    Returns:
-        Dictionary with predicted intent and OOD flag
+    Predict intent with enhanced out-of-distribution detection and print details to terminal.
     """
+    print("\n========== INTENT PREDICTION DEBUG ==========")
+    print(f"Input Text: {text}")
+    print(f"Detection Method: {method}")
+    
     # Tokenize input
     inputs = tokenizer(text, return_tensors="pt", padding=True, truncation=True, max_length=512)
     
@@ -96,32 +88,48 @@ def predict_intent_with_enhanced_ood(text, model, tokenizer, intent_classes,
     with torch.no_grad():
         outputs = model(**inputs)
         logits = outputs.logits
-    
+
+    print(f"Logits: {logits.numpy().tolist()}")
+
     # Get probabilities
     probs = torch.nn.functional.softmax(logits, dim=-1)
     max_prob, pred_idx = torch.max(probs, dim=-1)
+
+    print(f"Softmax Probabilities: {probs.numpy().tolist()}")
+    print(f"Max Probability (Confidence): {max_prob.item():.4f}")
+    print(f"Predicted Index: {pred_idx.item()}")
     
     # Calculate energy score
     energy = -torch.logsumexp(logits, dim=-1)
+    print(f"Energy Score: {energy.item():.4f}")
     
-    # Make OOD decision based on selected method
+    # OOD detection
     is_ood = False
     if method == 'energy':
         is_ood = energy.item() > energy_threshold
     elif method == 'msp':
         is_ood = max_prob.item() < msp_threshold
     elif method == 'combined':
-        is_ood = (energy.item() > energy_threshold) or (max_prob.item() < msp_threshold)
+        is_ood = (energy.item() > energy_threshold) and (max_prob.item() < msp_threshold)
     
-    # Get predicted intent class
+    print(f"OOD Detection -> is_ood: {is_ood}")
+    if is_ood:
+        print("Prediction marked as OUT-OF-DISTRIBUTION.")
+    else:
+        print("Prediction marked as IN-DISTRIBUTION.")
+    
+    # Get intent label
     predicted_intent = intent_classes[pred_idx.item()] if not is_ood else "unknown"
-    
+    print(f"Predicted Intent: {predicted_intent}")
+    print("=============================================\n")
+
     return {
         "intent": predicted_intent,
         "is_ood": is_ood,
         "confidence": max_prob.item(),
         "energy_score": energy.item()
     }
+
 
 def get_book_recommendations(user_query, top_n=5):
     """Get book recommendations based on user query."""
@@ -217,7 +225,5 @@ if __name__ == '__main__':
     
     # Option 2 (Alternative): Disable debug mode entirely for production
     # app.run(debug=False, host='0.0.0.0', port=5000)
-
-
-#curl -X POST http://localhost:5000/analyze -H "Content-Type: application/json" -d '{"text": "halo"}'
-	
+    # app.run(debug=False, host='0.0.0.0', port=5000)
+#curl -X POST http://localhost:5000/analyze -H "Content-Type: application/json" -d '{"text": "buku fantasi romance"}'	
