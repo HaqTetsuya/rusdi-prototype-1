@@ -17,6 +17,7 @@ class M_account extends CI_Model
     function insert_data($table, $data)
     {
         return $this->db->insert($table, $data);
+		
     }
     function edit_data($table, $where)
     {

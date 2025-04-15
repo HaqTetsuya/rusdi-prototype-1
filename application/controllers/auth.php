@@ -81,8 +81,9 @@ class Auth extends CI_Controller
             'email' => $email,
             'password' => $password
         );
-        $this->m_account->insert_data('users', $data);
-        $user_id = $this->db->insert_id(); // ambil ID terakhir
+        
+        $user = $this->m_account->get_user_by_email($email);
+		$user_id = $user->id;
 
         $data_session = array(
             'id' => $user_id,
@@ -93,4 +94,9 @@ class Auth extends CI_Controller
 
         redirect('chat');
     }
+	function logout(){
+        $this->session->sess_destroy();
+        $url = base_url('');
+        redirect('auth/login');
+	}
 }

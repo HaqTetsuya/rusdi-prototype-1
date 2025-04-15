@@ -71,7 +71,7 @@
             });            
 
             // Form validation
-            $("#signup-form").validate({
+            $("#login-form").validate({
                 rules: {
                     email: {
                         required: true,

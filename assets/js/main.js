@@ -1,5 +1,5 @@
 $(document).ready(function() {
-	let waitingForRecommendation = false;
+    let waitingForRecommendation = false;
 
     // Function to scroll chat to bottom
     function scrollToBottom() {
@@ -11,137 +11,139 @@ $(document).ready(function() {
     scrollToBottom();
 
     // Handle form submission
-	$('#chat-form').submit(function(e) {
-		
-		//waitingForRecommendation=false;
-		
-		e.preventDefault();
+    $('#chat-form').submit(function(e) {
+        e.preventDefault();
 
-		var message = $('#message').val();
-		if (message.trim() === '') return;
+        var message = $('#message').val();
+        if (message.trim() === '') return;
 
-		// Add user message to chat
-		$('#chat-container').append(`
-			<div class="flex items-end justify-end space-x-2">
-				<div class="bg-white p-3 rounded-lg border-2 border-black">
-					<p class="text-right font-bold">User</p>
-					<p>${message}</p>
-				</div>
-				<div class="w-10 h-10 rounded-full border-2 border-black flex-shrink-0"></div>
-			</div>
-		`);
+        // Get current timestamp
+        const now = new Date();
+        const timestamp = now.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
 
-		$('#message').val('');
-		scrollToBottom();
+        // Add user message to chat
+        $('#chat-container').append(`
+            <div class="flex items-end justify-end space-x-2 message-container">
+                <div class="bg-white p-3 rounded-lg border-2 border-black">
+                    <p class="text-right font-bold"><?= $user->nama; ?></p>
+                    <p>${message}</p>
+                    <div class="timestamp text-right">${timestamp}</div>
+                </div>
+                <div class="w-10 h-10 rounded-full border-2 border-black flex-shrink-0"></div>
+            </div>
+        `);
 
-		// Show typing indicator
-		$('#chat-container').append(`
-			<div class="flex items-start space-x-2" id="typing-indicator">
-				<div class="w-10 h-10 rounded-full border-2 border-black flex-shrink-0"></div>
-				<div class="bg-white p-3 rounded-lg border-2 border-black">
-					<p class="font-bold">ChatBot</p>
-					<p>Mengetik<span class="typing-dots">...</span></p>
-				</div>
-			</div>
-		`);
-		scrollToBottom();
-		
-		console.log("waitingForRecommendation status:", waitingForRecommendation); // debug log
+        $('#message').val('');
+        scrollToBottom();
 
-		// Percabangan untuk input rekomendasi
-		if (waitingForRecommendation) {
-			$.ajax({
-				url: `${baseUrl}${activeController}/sendbook`, // Gunakan endpoint sendbook di controller aktif
-				type: 'POST',
-				contentType: 'application/json',
-				data: JSON.stringify({ message: message }), // Gunakan format message yang konsisten
-				dataType: 'json',
-				xhrFields: {
-					withCredentials: true
-				},
-				success: function(response) {
-					$('#typing-indicator').remove();
-					
-					// Tambahkan respons dari server yang sudah diformat
-					$('#chat-container').append(`
-						<div class="flex items-start space-x-2">
-							<div class="w-10 h-10 rounded-full border-2 border-black flex-shrink-0"></div>
-							<div class="bg-white p-3 rounded-lg border-2 border-black">
-								<p class="font-bold">ChatBot</p>
-								<div>${response.response}</div>
-							</div>
-						</div>
-					`);
-					
-					// Reset state ke mode intent normal
-					waitingForRecommendation = false;
-					scrollToBottom();
-				},
-				error: function(xhr, status, error) {
-					$('#typing-indicator').remove();
-					$('#chat-container').append(`
-						<div class="flex items-start space-x-2">
-							<div class="w-10 h-10 rounded-full border-2 border-black flex-shrink-0"></div>
-							<div class="bg-white p-3 rounded-lg border-2 border-black">
-								<p class="font-bold">ChatBot</p>
-								<p>Terjadi kesalahan saat merekomendasikan buku. Silakan coba lagi.</p>
-							</div>
-						</div>
-					`);
-					waitingForRecommendation = false;
-					scrollToBottom();
-				}
-			});
-			return; // keluar dari fungsi karena kita sudah tangani
-		}
+        // Show typing indicator
+        $('#chat-container').append(`
+            <div class="flex items-start space-x-2" id="typing-indicator">
+                <div class="w-10 h-10 rounded-full border-2 border-black flex-shrink-0"></div>
+                <div class="bg-white p-3 rounded-lg border-2 border-black">
+                    <p class="font-bold">ChatBot</p>
+                    <p>Mengetik<span class="typing-dots">...</span></p>
+                </div>
+            </div>
+        `);
+        scrollToBottom();
+        
+        console.log("waitingForRecommendation status:", waitingForRecommendation); // debug log
 
-		// Jika bukan rekomendasi, lanjut ke intent biasa
-		$.ajax({
-			url: `${baseUrl}${activeController}/send`,
-			type: 'POST',
-			contentType: 'application/json',
-			data: JSON.stringify({ message: message }),
-			dataType: 'json',
+        // Percabangan untuk input rekomendasi
+        if (waitingForRecommendation) {
+            $.ajax({
+                url: `${baseUrl}${activeController}/sendbook`,
+                type: 'POST',
+                contentType: 'application/json',
+                data: JSON.stringify({ message: message }),
+                dataType: 'json',
+                xhrFields: {
+                    withCredentials: true
+                },
+                success: function(response) {
+                    $('#typing-indicator').remove();
+                    
+                    // Tambahkan respons dari server yang sudah diformat dengan timestamp
+                    $('#chat-container').append(`
+                        <div class="flex items-start space-x-2 message-container">
+                            <div class="w-10 h-10 rounded-full border-2 border-black flex-shrink-0"></div>
+                            <div class="bg-white p-3 rounded-lg border-2 border-black">
+                                <p class="font-bold">ChatBot</p>
+                                <div>${response.response}</div>
+                                <div class="timestamp">${timestamp}</div>
+                            </div>
+                        </div>
+                    `);
+                    
+                    // Reset state ke mode intent normal
+                    waitingForRecommendation = false;
+                    scrollToBottom();
+                },
+                error: function(xhr, status, error) {
+                    $('#typing-indicator').remove();
+                    $('#chat-container').append(`
+                        <div class="flex items-start space-x-2 message-container">
+                            <div class="w-10 h-10 rounded-full border-2 border-black flex-shrink-0"></div>
+                            <div class="bg-white p-3 rounded-lg border-2 border-black">
+                                <p class="font-bold">ChatBot</p>
+                                <p>Terjadi kesalahan saat merekomendasikan buku. Silakan coba lagi.</p>
+                                <div class="timestamp">${timestamp}</div>
+                            </div>
+                        </div>
+                    `);
+                    waitingForRecommendation = false;
+                    scrollToBottom();
+                }
+            });
+            return; // keluar dari fungsi karena kita sudah tangani
+        }
 
-			// 🔥 THIS IS THE FIX
-			xhrFields: {
-				withCredentials: true
-			},
+        // Jika bukan rekomendasi, lanjut ke intent biasa
+        $.ajax({
+            url: `${baseUrl}${activeController}/send`,
+            type: 'POST',
+            contentType: 'application/json',
+            data: JSON.stringify({ message: message }),
+            dataType: 'json',
+            xhrFields: {
+                withCredentials: true
+            },
+            success: function(response) {
+                $('#typing-indicator').remove();
+                $('#chat-container').append(`
+                    <div class="flex items-start space-x-2 message-container">
+                        <div class="w-10 h-10 rounded-full border-2 border-black flex-shrink-0"></div>
+                        <div class="bg-white p-3 rounded-lg border-2 border-black">
+                            <p class="font-bold">ChatBot</p>
+                            <div>${response.response}</div>
+                            <div class="timestamp">${timestamp}</div>
+                        </div>
+                    </div>
+                `);
+                scrollToBottom();
 
-			success: function(response) {
-				$('#typing-indicator').remove();
-				$('#chat-container').append(`
-					<div class="flex items-start space-x-2">
-						<div class="w-10 h-10 rounded-full border-2 border-black flex-shrink-0"></div>
-						<div class="bg-white p-3 rounded-lg border-2 border-black">
-							<p class="font-bold">ChatBot</p>
-							<p>${response.response}</p>
-						</div>
-					</div>
-				`);
-				scrollToBottom();
+                if (response.next_action && response.next_action === 'wait_book_recommendation') {
+                    waitingForRecommendation = true;
+                }
+            },
+            error: function(xhr, status, error) {
+                $('#typing-indicator').remove();
+                $('#chat-container').append(`
+                    <div class="flex items-start space-x-2 message-container">
+                        <div class="w-10 h-10 rounded-full border-2 border-black flex-shrink-0"></div>
+                        <div class="bg-white p-3 rounded-lg border-2 border-black">
+                            <p class="font-bold">ChatBot</p>
+                            <p>Maaf, terjadi kesalahan. Silakan coba lagi.</p>
+                            <div class="timestamp">${timestamp}</div>
+                        </div>
+                    </div>
+                `);
+                scrollToBottom();
+            }
+        });
+    });
 
-				if (response.next_action && response.next_action === 'wait_book_recommendation') {
-					waitingForRecommendation = true;
-				}
-			},
-
-			error: function(xhr, status, error) {
-				$('#typing-indicator').remove();
-				$('#chat-container').append(`
-					<div class="flex items-start space-x-2">
-						<div class="w-10 h-10 rounded-full border-2 border-black flex-shrink-0"></div>
-						<div class="bg-white p-3 rounded-lg border-2 border-black">
-							<p class="font-bold">ChatBot</p>
-							<p>Maaf, terjadi kesalahan. Silakan coba lagi.</p>
-						</div>
-					</div>
-				`);
-				scrollToBottom();
-			}
-		});
-
-	});
     // Animate typing dots
     setInterval(function() {
         var dots = $('.typing-dots');

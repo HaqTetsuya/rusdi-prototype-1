@@ -109,6 +109,7 @@
         });
     </script>
     <script>
+	/*
         $(document).ready(function() {
             // Show/hide password
             $('#toggle-password').click(function() {
@@ -174,7 +175,7 @@
                     $(element).removeClass("border-red-500");
                 }
             });
-        });
+        });*/
     </script>
 </body>
 
