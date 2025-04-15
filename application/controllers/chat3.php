@@ -1,36 +1,40 @@
 <?php
-defined('BASEPATH') OR exit('No direct script access allowed');
+defined('BASEPATH') or exit('No direct script access allowed');
 
-class Chat3 extends CI_Controller {
-    
-    public function __construct() {
-        parent::__construct();
-        // Load necessary libraries
-        $this->load->helper('url');
-        $this->load->library('session');
+class Chat3 extends CI_Controller
+{
+
+	public function __construct()
+	{
+		parent::__construct();
+		// Load necessary libraries
+		$this->load->helper('url');
+		$this->load->library('session');
 		$this->load->model('Chat_model', 'chatModel'); // Memuat model Chat_model
-    }
-    
-    /**
-     * Index page - display chat interface
-     */
-    public function index() {
-        $data['active_controller'] = 'chat3'; // Menandai controller yang aktif
-        $data['chats'] = $this->chatModel->getChatHistory('chats3'); // Gunakan tabel 'chats2'
-        $this->load->view('chatForm', $data);
-    }
-    
-    /**
-     * Handle chat message sending
-     * Communicates with Flask API for book recommendations
-     */
-	
-	public function send() {
+	}
+
+	/**
+	 * Index page - display chat interface
+	 */
+	public function index()
+	{
+		$data['active_controller'] = 'chat3'; // Menandai controller yang aktif
+		$data['chats'] = $this->chatModel->getChatHistory('chats3'); // Gunakan tabel 'chats2'
+		$this->load->view('chatForm', $data);
+	}
+
+	/**
+	 * Handle chat message sending
+	 * Communicates with Flask API for book recommendations
+	 */
+
+	public function send()
+	{
 		if (!$this->input->is_ajax_request()) {
 			show_error('Direct access not allowed', 403);
 			return;
 		}
-
+		$user_id= $this->session->userdata('id');
 		$json_data = file_get_contents('php://input');
 		$post_data = json_decode($json_data, true);
 		$message = isset($post_data['message']) ? trim($post_data['message']) : '';
@@ -78,9 +82,14 @@ class Chat3 extends CI_Controller {
 		}
 
 		$formatted_response = $this->format_recommendations($api_response['results']);
-
+		$data = [
+			'user_id' => $user_id,
+			'user_message' => $message,
+			'bot_response' => $formatted_response
+		];
+		$this->chatModel->saveChat('chats3', $data);
 		// ✅ Save chat to database
-		$this->chatModel->saveChat('chats3', $message, $formatted_response);
+
 
 		// Return response
 		$this->output
@@ -88,35 +97,35 @@ class Chat3 extends CI_Controller {
 			->set_output(json_encode(['response' => $formatted_response]));
 	}
 
-    
-    /**
-     * Format book recommendations into HTML for display
-     */
-    private function format_recommendations($results) {
-        $output = "<strong>Buku yang direkomendasikan untuk Anda:</strong><br><br>";
-        
-        foreach ($results as $index => $book) {
-            $relevance_percentage = $book['relevance'] * 100;
-            $year = $book['year'] ? $book['year'] : 'Tahun tidak diketahui';
-            
-            $output .= "<div class='book-recommendation'>";
-            $output .= "<strong>" . ($index + 1) . ". " . htmlspecialchars($book['title']) . "</strong><br>";
-            $output .= "Penulis: " . htmlspecialchars($book['author']) . "<br>";
-            $output .= "Kategori: " . htmlspecialchars($book['category']) . "<br>";
-            $output .= "Tahun: " . htmlspecialchars($year) . "<br>";
+
+	/**
+	 * Format book recommendations into HTML for display
+	 */
+	private function format_recommendations($results)
+	{
+		$output = "<strong>Buku yang direkomendasikan untuk Anda:</strong><br><br>";
+
+		foreach ($results as $index => $book) {
+			$relevance_percentage = $book['relevance'] * 100;
+			$year = $book['year'] ? $book['year'] : 'Tahun tidak diketahui';
+
+			$output .= "<div class='book-recommendation'>";
+			$output .= "<strong>" . ($index + 1) . ". " . htmlspecialchars($book['title']) . "</strong><br>";
+			$output .= "Penulis: " . htmlspecialchars($book['author']) . "<br>";
+			$output .= "Kategori: " . htmlspecialchars($book['category']) . "<br>";
+			$output .= "Tahun: " . htmlspecialchars($year) . "<br>";
 			$output .= "<p><em>Deskripsi:</em> " . nl2br(htmlspecialchars($book['description'])) . "</p>";
-            $output .= "Relevansi: " . number_format($relevance_percentage, 0) . "%<br>";
-            $output .= "</div><br>";
-        }
-        
-        $output .= "<p>Apakah Anda ingin rekomendasi buku lainnya? Silakan ketik pertanyaan atau topik yang Anda minati.</p>";
-        
-        return $output;
-    }
-	public function clear()
-		{
-			$this->chatModel->clearChatHistory('chats3');
-			redirect('chat'); // redirect back to chat page
+			$output .= "Relevansi: " . number_format($relevance_percentage, 0) . "%<br>";
+			$output .= "</div><br>";
 		}
-	
+
+		$output .= "<p>Apakah Anda ingin rekomendasi buku lainnya? Silakan ketik pertanyaan atau topik yang Anda minati.</p>";
+
+		return $output;
+	}
+	public function clear()
+	{
+		$this->chatModel->clearChatHistory('chats3');
+		redirect('chat'); // redirect back to chat page
+	}
 }

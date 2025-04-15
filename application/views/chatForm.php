@@ -65,6 +65,11 @@
 			<i class="fas fa-trash"></i>
 		</button>
 	</form>
+	<div class="fixed top-50 left-5 bg-white text-black p-3 shadow-lg border-2 border-black">
+		<p><strong>ID:</strong> <?= $user->id; ?></p>
+		<p><strong>Nama:</strong> <?= $user->nama; ?></p>
+	</div>
+
 
     <script src="<?php echo base_url('assets/js/main.js'); ?>"></script>
 	<script>

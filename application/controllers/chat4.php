@@ -6,12 +6,21 @@ class Chat4 extends CI_Controller
     {
         parent::__construct();
         $this->load->model('Chat_model', 'chatModel'); // Memuat model Chat_model
+		$this->load->model('m_account');
+		if (!$this->session->userdata('status') || $this->session->userdata('status') !== 'telah_login') {
+			redirect('auth/login?alert=belum_login');
+		}
     }
 
     public function index()
     {
+		$user_id= $this->session->userdata('id');
+    
+    // Ambil data pengguna dari tabel users
+		$user = $this->m_account->getUserById($user_id);
         $data['active_controller'] = 'chat4'; // Menandai controller yang aktif
-        $data['chats'] = $this->chatModel->getChatHistory('chats4'); // Gunakan tabel 'chats2'
+        $data['chats'] = $this->chatModel->getChatHistory('chats'); // Gunakan tabel 'chats2'
+		$data['user'] = $user;
         $this->load->view('chatForm', $data);
     }
 
@@ -21,7 +30,8 @@ class Chat4 extends CI_Controller
             echo json_encode(['response' => 'Invalid request']);
             return;
         }
-
+        $user_id= $this->session->userdata('id');
+		log_message('error', 'AJAX - Session user_id: ' . print_r($user_id, true));
         $data = json_decode(file_get_contents('php://input'), true);
         $message = $data['message'] ?? '';
 
@@ -83,8 +93,15 @@ class Chat4 extends CI_Controller
                 }
             }
             
-            // Simpan percakapan ke database
-            $this->chatModel->saveChat('chats4', $message, $result['response']);
+            // Simpan percakapan ke database           
+            $data = [
+                'user' => $user_id,
+                'user_message' => $message,
+                'bot_response' => $result['response']
+            ];
+            $this->db->db_debug = TRUE;
+
+            $this->chatModel->saveChat('chats', $data);  
             
         } else {
             error_log("Flask API error: HTTP $httpcode");
@@ -94,12 +111,14 @@ class Chat4 extends CI_Controller
         echo json_encode($result);
     }
 
+	
     public function sendbook() {
         if (!$this->input->is_ajax_request()) {
             show_error('Direct access not allowed', 403);
             return;
         }
-
+		
+		$user_id= $this->session->userdata('id');
         $json_data = file_get_contents('php://input');
         $post_data = json_decode($json_data, true);
         $message = isset($post_data['message']) ? trim($post_data['message']) : '';
@@ -147,9 +166,15 @@ class Chat4 extends CI_Controller
         }
 
         $formatted_response = $this->format_recommendations($api_response['results']);
+		
+		$data = [
+                'user' => $user_id,
+                'user_message' => $message,
+                'bot_response' => $formatted_response
+            ];
 
         // ✅ Save chat to database
-        $this->chatModel->saveChat('chats4', $message, $formatted_response);
+        $this->chatModel->saveChat('chats', $data);
 
         // Return response
         $this->output
@@ -184,7 +209,7 @@ class Chat4 extends CI_Controller
     
     public function clear()
     {
-        $this->chatModel->clearChatHistory('chats4');
-        redirect('chat2'); // redirect back to chat page
+        $this->chatModel->clearChatHistory('chats');
+        redirect('chat4'); // redirect back to chat page
     }
 }

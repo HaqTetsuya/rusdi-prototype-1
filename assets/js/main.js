@@ -56,6 +56,9 @@ $(document).ready(function() {
 				contentType: 'application/json',
 				data: JSON.stringify({ message: message }), // Gunakan format message yang konsisten
 				dataType: 'json',
+				xhrFields: {
+					withCredentials: true
+				},
 				success: function(response) {
 					$('#typing-indicator').remove();
 					
@@ -99,6 +102,12 @@ $(document).ready(function() {
 			contentType: 'application/json',
 			data: JSON.stringify({ message: message }),
 			dataType: 'json',
+
+			// 🔥 THIS IS THE FIX
+			xhrFields: {
+				withCredentials: true
+			},
+
 			success: function(response) {
 				$('#typing-indicator').remove();
 				$('#chat-container').append(`
@@ -112,11 +121,11 @@ $(document).ready(function() {
 				`);
 				scrollToBottom();
 
-				// Deteksi apakah bot menyuruh kita tunggu deskripsi untuk pencarian buku
 				if (response.next_action && response.next_action === 'wait_book_recommendation') {
 					waitingForRecommendation = true;
 				}
 			},
+
 			error: function(xhr, status, error) {
 				$('#typing-indicator').remove();
 				$('#chat-container').append(`
@@ -131,6 +140,7 @@ $(document).ready(function() {
 				scrollToBottom();
 			}
 		});
+
 	});
     // Animate typing dots
     setInterval(function() {

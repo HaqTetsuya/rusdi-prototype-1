@@ -3,26 +3,26 @@ defined('BASEPATH') or exit('No direct script access allowed');
 
 class Chat2 extends CI_Controller
 {
-    public function __construct()
-		{
-			parent::__construct();
-			$this->load->model('Chat_model', 'chatModel'); // Memuat model Chat_model
-		}
+	public function __construct()
+	{
+		parent::__construct();
+		$this->load->model('Chat_model', 'chatModel'); // Memuat model Chat_model
+	}
 
-    public function index()
-    {
-        $data['active_controller'] = 'chat2'; // Menandai controller yang aktif
-        $data['chats'] = $this->chatModel->getChatHistory('chats2'); // Gunakan tabel 'chats2'
-        $this->load->view('chatForm', $data);
-    }
+	public function index()
+	{
+		$data['active_controller'] = 'chat2'; // Menandai controller yang aktif
+		$data['chats'] = $this->chatModel->getChatHistory('chats2'); // Gunakan tabel 'chats2'
+		$this->load->view('chatForm', $data);
+	}
 
-    public function send()
+	public function send()
 	{
 		if (!$this->input->is_ajax_request()) {
 			echo json_encode(['response' => 'Invalid request']);
 			return;
 		}
-
+		$user_id = $this->session->userdata('id');
 		$data = json_decode(file_get_contents('php://input'), true);
 		$message = $data['message'] ?? '';
 
@@ -78,8 +78,13 @@ class Chat2 extends CI_Controller
 						break;
 				}
 			}
+			$data = [
+				'user_id' => $user_id,
+				'user_message' => $message,
+				'bot_response' => $reply
+			];
 
-			$this->chatModel->saveChat('chats2', $message, $reply);
+			$this->chatModel->saveChat('chats2', $data);
 		} else {
 			error_log("Flask API error: HTTP $httpcode");
 			$reply = 'Terjadi kesalahan saat menghubungi server. Silakan coba lagi.';
@@ -87,11 +92,10 @@ class Chat2 extends CI_Controller
 
 		echo json_encode(['response' => $reply]);
 	}
-	
+
 	public function clear()
 	{
 		$this->chatModel->clearChatHistory('chats2');
 		redirect('chat2'); // redirect back to chat page
 	}
-
 }

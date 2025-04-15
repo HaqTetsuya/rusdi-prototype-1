@@ -23,8 +23,11 @@ class Chat extends CI_Controller
             echo json_encode(['response' => 'Invalid request']);
             return;
         }
-
+        $user_id = $this->session->userdata('id');
         $data = json_decode(file_get_contents('php://input'), true);
+		error_log("Input JSON: " . file_get_contents('php://input'));
+		error_log("Parsed message: " . ($data['message'] ?? 'null'));
+
         $message = $data['message'] ?? '';
 
         // Kirim data ke Flask API d
@@ -111,8 +114,17 @@ class Chat extends CI_Controller
                     $reply = 'Maaf, saya belum bisa menangani permintaan tersebut.';
                     break;
             }
-
-            $this->chatModel->saveChat('chats', $message, $reply);
+            $data = [
+                'user' => $user_id,
+                'user_message' => $message,
+                'bot_response' => $reply
+            ];
+            try {
+				$this->chatModel->saveChat('chats', $data);
+			} catch (Exception $e) {
+				error_log("DB Error: " . $e->getMessage());
+			}
+                       
         } else {
             $reply = 'Terjadi kesalahan saat menghubungi server. Silakan coba lagi.';
         }
