@@ -17,4 +17,12 @@ class Chat_model extends CI_Model
     {
         return $this->db->empty_table($table); // Hapus semua data dari tabel yang sesuai
     }
+    public function getChatHistoryByUser($table, $user_id)
+    {
+        $this->db->where('user', $user_id);
+        $this->db->order_by('timestamp', 'ASC'); // jika ada kolom waktu
+        return $this->db->get($table)->result_array(); // bukan ->result()
+
+    }
+
 }

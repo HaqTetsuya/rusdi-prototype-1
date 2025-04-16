@@ -17,10 +17,12 @@ class Chat4 extends CI_Controller
 		$user_id= $this->session->userdata('id');
     
     // Ambil data pengguna dari tabel users
-		$user = $this->m_account->getUserById($user_id);
-        $data['active_controller'] = 'chat4'; // Menandai controller yang aktif
-        $data['chats'] = $this->chatModel->getChatHistory('chats'); // Gunakan tabel 'chats2'
-		$data['user'] = $user;
+		$user = $this->m_account->getUserById($user_id);        
+		$data = [
+			'active_controller' => 'chat4',
+			'chats' => $this->chatModel->getChatHistoryByUser('chats', $user_id), // Gunakan tabel 'chats2',
+			'user' => $user
+		];		
         $this->load->view('chatForm', $data);
     }
 

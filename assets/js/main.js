@@ -25,7 +25,7 @@ $(document).ready(function() {
         $('#chat-container').append(`
             <div class="flex items-end justify-end space-x-2 message-container">
                 <div class="bg-white p-3 rounded-lg border-2 border-black">
-                    <p class="text-right font-bold"><?= $user->nama; ?></p>
+                    <p class="text-right font-bold">${userName}</p>
                     <p>${message}</p>
                     <div class="timestamp text-right">${timestamp}</div>
                 </div>

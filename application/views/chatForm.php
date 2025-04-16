@@ -96,6 +96,7 @@
     <script src="<?php echo base_url('assets/js/main.js'); ?>"></script>
     <script>
         const baseUrl = "<?= base_url() ?>";
+		const userName = <?= json_encode($user->nama); ?>;
         var activeController = "<?php echo $active_controller; ?>";                       
     </script>
 </body>
