@@ -1,1 +1,0 @@
-# rusdi-prototype-1
