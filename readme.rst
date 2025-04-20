@@ -1,3 +1,8 @@
+.. image:: https://colab.research.google.com/assets/colab-badge.svg
+   :target: https://colab.research.google.com/github/HaqTetsuya/ChatbotPerpusBipa/blob/main/IndobertPerpusChatbot.ipynb
+   :alt: Open in Colab
+
+
 # ChatbotPerpusBipa
 
 ChatbotPerpusBipa is a chatbot designed for the library system of STMIK BNA Patria. It is built using **CodeIgniter 3** and **IndoBERT** for natural language processing. The repository contains scripts and models to create and deploy the chatbot.
@@ -37,9 +42,11 @@ ChatbotPerpusBipa is a chatbot designed for the library system of STMIK BNA Patr
 
 Before running the chatbot, you need to train the IndoBERT model. Use the provided Colab notebook for training:
 
-<a href="https://colab.research.google.com/github/HaqTetsuya/ChatbotPerpusBipa/raw/main/IndobertPerpusChatbot.ipynb" target="_blank">
-  <img src="https://colab.research.google.com/assets/colab-badge.svg" alt="Open in Colab"/>
-</a>
+.. image:: https://colab.research.google.com/assets/colab-badge.svg
+   :target: https://colab.research.google.com/github/HaqTetsuya/ChatbotPerpusBipa/blob/main/IndobertPerpusChatbot.ipynb
+   :alt: Open in Colab
+
+
 
 1. Open the Colab notebook by clicking the badge above.
 2. Follow the instructions in the notebook to train the model:
