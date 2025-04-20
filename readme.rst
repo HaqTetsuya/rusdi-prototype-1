@@ -37,7 +37,8 @@ ChatbotPerpusBipa is a chatbot designed for the library system of STMIK BNA Patr
 
 Before running the chatbot, you need to train the IndoBERT model. Use the provided Colab notebook for training:
 
-[![Open in Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/HaqTetsuya/ChatbotPerpusBipa/blob/main/path_to_colab_notebook.ipynb)
+[![Open in Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/HaqTetsuya/ChatbotPerpusBipa/blob/main/IndobertPerpusChatbot.ipynb)
+
 
 1. Open the Colab notebook by clicking the badge above.
 2. Follow the instructions in the notebook to train the model:
