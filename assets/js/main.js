@@ -46,15 +46,7 @@ $(document).ready(function() {
 
         // Send AJAX request
         $.ajax({
-<<<<<<< HEAD
-<<<<<<< HEAD
             url: `${baseUrl}${activeController}/send`,
-=======
-            url: `https://localhost/rusdi-prototype-1/${activeController}/send`,
->>>>>>> 537141c (revert js)
-=======
-            url: `${baseUrl}${activeController}/send`,
->>>>>>> 5461946 (integrating book recomendation)
             type: 'POST',
             contentType: 'application/json', 
             data: JSON.stringify({ message: message }),
